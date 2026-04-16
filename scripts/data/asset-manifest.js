@@ -1,3 +1,9 @@
+import {
+  generatedExtraBackgrounds,
+  generatedExtraFrames,
+  generatedExtraStickers,
+  generatedExtraWatermarks
+} from "./generated-extra-assets.js";
 import { generatedSkyblogFrames, generatedSkyblogStickers } from "./generated-skyblog-pack.js";
 
 const withSrc = (folder, entries) =>
@@ -28,7 +34,8 @@ export const assetManifest = {
     ["bg-peace-2", "Peace 002", "peace002.png"],
     ["bg-peace-3", "Peace 003", "peace003.png"],
     ["bg-snow", "Snow Sadness", "snow001.png"],
-    ["bg-drop", "Dropped Image", "Dropped Image.png"]
+    ["bg-drop", "Dropped Image", "Dropped Image.png"],
+    ...generatedExtraBackgrounds
   ]),
   stickers: withSrc("stickers", [
     ["sticker-heart", "Bling Heart", "bling-heart.svg"],
@@ -95,14 +102,14 @@ export const assetManifest = {
     ["sticker-tkt", "TKT", "sticker_tkt.png"],
     ["sticker-vip-badge", "VIP Badge Round", "sticker_vip_badge_round.png"],
     ["sticker-vip-only", "VIP Only", "sticker_vip_only.png"],
-    ...generatedSkyblogStickers
+    ...generatedSkyblogStickers,
+    ...generatedExtraStickers
   ]),
   frames: withSrc("frames", [
     ["frame-glitter", "Glitter Frame", "glitter-frame.svg"],
     ["frame-chrome", "Chrome Hearts", "chrome-hearts-frame.svg"],
     ["frame-vintage", "Vintage Symmetric", "Vintage-Symmetric-Frame.svg"],
     ["frame-roses", "Roses Frame", "roses-frames.svg"],
-    ["frame-stars", "Stars Frame", "stars-frame.svg"],
     ["frame-chrome-deluxe", "Chrome Deluxe", "frame_chrome_deluxe.png"],
     ["frame-dolphin-blue", "Dolphin Blue", "frame_dolphin_blue.png"],
     ["frame-emo-black-pink", "Emo Black Pink", "frame_emo_black_pink.png"],
@@ -113,7 +120,8 @@ export const assetManifest = {
     ["frame-pearl-princess", "Pearl Princess", "frame_pearl_princess.png"],
     ["frame-rainbow-ring", "Rainbow Ring", "frame_rainbow_ring.png"],
     ["frame-star-sparkle", "Star Sparkle", "frame_star_sparkle.png"],
-    ...generatedSkyblogFrames
+    ...generatedSkyblogFrames,
+    ...generatedExtraFrames
   ]),
   watermarks: withSrc("watermarks", [
     ["wm-preview", "PREVIEW", "preview-stamp.svg"],
@@ -125,7 +133,8 @@ export const assetManifest = {
     ["wm-gettycore-repeat", "Gettycore Repeat", "wm_gettycore_repeat.png"],
     ["wm-preview-double", "Preview Only Double", "wm_preview_only_double.png"],
     ["wm-preview-repeat", "Preview Repeat", "wm_preview_repeat.png"],
-    ["wm-sample-center", "Sample Center", "wm_sample_center.png"]
+    ["wm-sample-center", "Sample Center", "wm_sample_center.png"],
+    ...generatedExtraWatermarks
   ]),
   fonts: [
     {
