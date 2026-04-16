@@ -554,7 +554,7 @@ export class AppRenderer {
             }
           </div>
         </div>
-        <p class="tiny-copy">`Lignes`: `0` = auto, sinon le texte est réparti sur ce nombre de lignes.</p>
+        <p class="tiny-copy">Lignes : 0 = auto. Sinon, le texte est réparti sur ce nombre de lignes.</p>
       `;
     }
 
@@ -608,7 +608,7 @@ export class AppRenderer {
                   ${
                     layer.type === "background" || layer.type === "frame"
                       ? "<span class='lock-indicator'>fixe</span>"
-                      : `<button class="layer-lock-button ${layer.locked ? "is-locked" : ""}" data-action="toggle-lock-layer" data-id="${layer.id}" data-layer-lock-button>${layer.locked ? "unlock" : "lock"}</button>`
+                      : `<button class="layer-lock-button ${layer.locked ? "is-locked" : ""}" data-action="toggle-lock-layer" data-id="${layer.id}" data-layer-lock-button="true">${layer.locked ? "unlock" : "lock"}</button>`
                   }
                 </div>
               `
