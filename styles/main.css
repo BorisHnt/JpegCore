@@ -250,6 +250,9 @@ body::before {
 .panel {
   display: flex;
   flex-direction: column;
+  height: min(72vh, calc(100vh - 240px));
+  min-height: 0;
+  overflow: hidden;
 }
 
 .panel-title,
@@ -306,8 +309,30 @@ body::before {
 
 .panel-scroll,
 .inspector-stack {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   padding: 14px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #ff2faa rgba(255, 255, 255, 0.55);
+}
+
+.panel-scroll::-webkit-scrollbar,
+.inspector-stack::-webkit-scrollbar {
+  width: 12px;
+}
+
+.panel-scroll::-webkit-scrollbar-track,
+.inspector-stack::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.55);
+  border-left: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+.panel-scroll::-webkit-scrollbar-thumb,
+.inspector-stack::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffef75, #ff39ae 55%, #7f2cff);
+  border: 2px solid #fff;
 }
 
 .library-section,
@@ -970,6 +995,7 @@ body::before {
     right: 10px;
     bottom: 78px;
     min-height: 0;
+    height: auto;
     max-height: min(72vh, 680px);
     z-index: 30;
     transform: translateY(calc(100% + 24px));
