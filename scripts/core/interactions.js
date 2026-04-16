@@ -23,8 +23,8 @@ export class StageInteractions {
   bind() {
     this.sceneStage.addEventListener("pointerdown", (event) => this.onPointerDown(event));
     window.addEventListener("pointermove", (event) => this.onPointerMove(event));
-    window.addEventListener("pointerup", () => this.onPointerUp());
-    window.addEventListener("pointercancel", () => this.onPointerUp());
+    window.addEventListener("pointerup", (event) => this.onPointerUp(event));
+    window.addEventListener("pointercancel", (event) => this.onPointerUp(event));
   }
 
   onPointerDown(event) {
@@ -45,6 +45,9 @@ export class StageInteractions {
       if (!layer || layer.locked || layer.id === "background" || layer.id === "frame") {
         return;
       }
+      if (layerId !== this.app.state.selectionId) {
+        this.app.setSelection(layerId);
+      }
       const handleType = handle.dataset.handle;
       this.active = {
         mode: handleType === "rotate" ? "rotate" : handleType === "move" ? "move" : "resize",
@@ -62,11 +65,14 @@ export class StageInteractions {
 
     if (layerNode) {
       const layerId = layerNode.dataset.layerId;
-      this.app.setSelection(layerId);
       const layer = getLayerById(this.app.state, layerId);
       if (!layer || layer.id === "background" || layer.id === "frame") {
         event.preventDefault();
         return;
+      }
+
+      if (layerId !== this.app.state.selectionId) {
+        this.app.setSelection(layerId);
       }
 
       if (layer.locked) {
@@ -168,10 +174,15 @@ export class StageInteractions {
     }
   }
 
-  onPointerUp() {
+  onPointerUp(event) {
     if (!this.active) {
       return;
     }
+
+    if (event && event.pointerId !== undefined && event.pointerId !== this.active.pointerId) {
+      return;
+    }
+
     this.sceneStage.releasePointerCapture?.(this.active.pointerId);
     const labels = {
       move: "Déplacer calque",

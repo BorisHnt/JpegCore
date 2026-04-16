@@ -597,6 +597,7 @@ body::before {
 .scene-background {
   background-position: center;
   background-repeat: no-repeat;
+  pointer-events: none;
 }
 
 .empty-bg {
@@ -648,6 +649,10 @@ body::before {
 .scene-item,
 .scene-frame-layer {
   position: absolute;
+}
+
+.scene-frame-layer {
+  pointer-events: none;
 }
 
 .scene-item {
@@ -723,7 +728,7 @@ body::before {
 
 .selection-hit-area {
   position: absolute;
-  inset: -12px;
+  inset: 0;
   z-index: 1;
   cursor: move;
   background: transparent;

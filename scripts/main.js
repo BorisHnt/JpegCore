@@ -116,6 +116,16 @@ class JpegCoreApp {
   }
 
   setSelection(layerId) {
+    const alreadySelected = this.state.selectionId === layerId;
+    if (alreadySelected) {
+      if (this.isMobileViewport() && layerId && layerId !== "background" && layerId !== "frame") {
+        this.mobileUi.panel = "right";
+        this.mobileUi.rightTab = "properties";
+        this.applyMobileUi();
+      }
+      return;
+    }
+
     this.store.mutate((state) => {
       state.selectionId = layerId;
     });

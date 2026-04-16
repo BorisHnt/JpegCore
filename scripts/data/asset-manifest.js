@@ -1,3 +1,5 @@
+import { generatedSkyblogFrames, generatedSkyblogStickers } from "./generated-skyblog-pack.js";
+
 const withSrc = (folder, entries) =>
   entries.map(([id, label, file]) => ({
     id,
@@ -92,7 +94,8 @@ export const assetManifest = {
     ["sticker-teddy-bear", "Teddy Bear", "sticker_teddy_bear.png"],
     ["sticker-tkt", "TKT", "sticker_tkt.png"],
     ["sticker-vip-badge", "VIP Badge Round", "sticker_vip_badge_round.png"],
-    ["sticker-vip-only", "VIP Only", "sticker_vip_only.png"]
+    ["sticker-vip-only", "VIP Only", "sticker_vip_only.png"],
+    ...generatedSkyblogStickers
   ]),
   frames: withSrc("frames", [
     ["frame-glitter", "Glitter Frame", "glitter-frame.svg"],
@@ -109,7 +112,8 @@ export const assetManifest = {
     ["frame-leopard-gold", "Leopard Gold", "frame_leopard_gold.png"],
     ["frame-pearl-princess", "Pearl Princess", "frame_pearl_princess.png"],
     ["frame-rainbow-ring", "Rainbow Ring", "frame_rainbow_ring.png"],
-    ["frame-star-sparkle", "Star Sparkle", "frame_star_sparkle.png"]
+    ["frame-star-sparkle", "Star Sparkle", "frame_star_sparkle.png"],
+    ...generatedSkyblogFrames
   ]),
   watermarks: withSrc("watermarks", [
     ["wm-preview", "PREVIEW", "preview-stamp.svg"],
