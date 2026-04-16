@@ -721,8 +721,17 @@ body::before {
   border: 2px solid #fff;
 }
 
+.selection-hit-area {
+  position: absolute;
+  inset: -12px;
+  z-index: 1;
+  cursor: move;
+  background: transparent;
+}
+
 .handle {
   position: absolute;
+  z-index: 2;
   width: 18px;
   height: 18px;
   border: 3px solid #fff;
@@ -761,6 +770,7 @@ body::before {
 
 .move-handle {
   position: absolute;
+  z-index: 2;
   left: calc(50% - 34px);
   top: -36px;
   min-width: 68px;

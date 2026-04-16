@@ -384,6 +384,7 @@ export class AppRenderer {
 
   renderHandles() {
     return `
+      <span class="selection-hit-area" data-handle="move" aria-hidden="true"></span>
       <span class="handle handle-nw" data-handle="nw"></span>
       <span class="handle handle-n" data-handle="n"></span>
       <span class="handle handle-ne" data-handle="ne"></span>
