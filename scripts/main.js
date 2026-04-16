@@ -32,6 +32,12 @@ class JpegCoreApp {
     this.interactions = new StageInteractions(refs.sceneStage, this);
     this.exporter = new Exporter();
     this.worsenEngine = new WorsenEngine();
+    this.libraryUi = {
+      category: "all",
+      query: "",
+      stickerGroup: "all",
+      collapsed: {}
+    };
   }
 
   get state() {
@@ -40,7 +46,7 @@ class JpegCoreApp {
 
   async init() {
     await this.assetLoader.loadFonts();
-    this.renderer.renderLibraries();
+    this.renderLibraries();
     this.bindUi();
     this.interactions.bind();
     installKeyboardShortcuts(this);
@@ -52,10 +58,25 @@ class JpegCoreApp {
 
   bindUi() {
     document.body.addEventListener("click", (event) => this.handleActionClick(event));
+    this.refs.assetPanel.addEventListener("click", (event) => this.handleLibraryClick(event));
+    this.refs.assetPanel.addEventListener("input", (event) => this.handleLibraryInput(event));
     this.refs.propertiesPanel.addEventListener("input", (event) => this.handlePropertyInput(event));
     this.refs.propertiesPanel.addEventListener("change", (event) => this.handlePropertyChange(event));
     this.refs.bgInput.addEventListener("change", (event) => this.handleFileImport(event, "background"));
     this.refs.stickerInput.addEventListener("change", (event) => this.handleFileImport(event, "sticker"));
+  }
+
+  renderLibraries(restoreSearchFocus = false, selectionStart = null, selectionEnd = null) {
+    this.renderer.renderLibraries(this.libraryUi);
+    if (restoreSearchFocus) {
+      const input = this.refs.assetPanel.querySelector("[data-library-input='query']");
+      if (input) {
+        input.focus();
+        if (selectionStart !== null && selectionEnd !== null) {
+          input.setSelectionRange(selectionStart, selectionEnd);
+        }
+      }
+    }
   }
 
   render() {
@@ -381,6 +402,50 @@ class JpegCoreApp {
     if (action === "move-down") this.moveSelection(-1);
     if (action === "select-layer") this.setSelection(id);
     if (action === "apply-catastrophe") this.applyCatastrophe(preset);
+  }
+
+  handleLibraryClick(event) {
+    const categoryButton = event.target.closest("[data-library-category]");
+    if (categoryButton) {
+      this.libraryUi.category = categoryButton.dataset.libraryCategory;
+      if (this.libraryUi.category !== "stickers") {
+        this.libraryUi.stickerGroup = "all";
+      }
+      this.renderLibraries();
+      return;
+    }
+
+    const stickerGroupButton = event.target.closest("[data-library-sticker-group]");
+    if (stickerGroupButton) {
+      this.libraryUi.stickerGroup = stickerGroupButton.dataset.libraryStickerGroup;
+      this.renderLibraries();
+      return;
+    }
+
+    const toggleButton = event.target.closest("[data-library-toggle]");
+    if (toggleButton) {
+      const key = toggleButton.dataset.libraryToggle;
+      this.libraryUi.collapsed[key] = !this.libraryUi.collapsed[key];
+      this.renderLibraries();
+      return;
+    }
+
+    const clearButton = event.target.closest("[data-library-action='clear-query']");
+    if (clearButton) {
+      this.libraryUi.query = "";
+      this.renderLibraries();
+    }
+  }
+
+  handleLibraryInput(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+    if (target.dataset.libraryInput === "query") {
+      this.libraryUi.query = target.value;
+      this.renderLibraries(true, target.selectionStart, target.selectionEnd);
+    }
   }
 
   handlePropertyInput(event) {

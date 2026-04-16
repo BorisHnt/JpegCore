@@ -8,79 +8,241 @@ export class AppRenderer {
     this.manifest = manifest;
   }
 
-  renderLibraries() {
+  renderLibraries(libraryUi = {}) {
     const { assetPanel } = this.refs;
+    const query = (libraryUi.query || "").trim().toLowerCase();
+    const category = libraryUi.category || "all";
+    const stickerGroup = libraryUi.stickerGroup || "all";
+    const collapsed = libraryUi.collapsed || {};
+
+    const filteredBackgrounds = this.filterAssets(this.manifest.backgrounds, query);
+    const filteredFrames = this.filterAssets(this.manifest.frames, query);
+    const filteredWatermarks = this.filterAssets(this.manifest.watermarks, query);
+    const stickerBuckets = this.groupStickers(this.filterAssets(this.manifest.stickers, query));
+
+    const visibleStickerBuckets =
+      stickerGroup === "all"
+        ? stickerBuckets.filter((bucket) => bucket.items.length)
+        : stickerBuckets.filter((bucket) => bucket.key === stickerGroup && bucket.items.length);
+
+    const visibleStickerCount = visibleStickerBuckets.reduce((count, bucket) => count + bucket.items.length, 0);
+    const totals = {
+      all:
+        filteredBackgrounds.length +
+        filteredFrames.length +
+        filteredWatermarks.length +
+        visibleStickerCount +
+        catastrophePresets.length,
+      backgrounds: filteredBackgrounds.length,
+      stickers: visibleStickerCount,
+      watermarks: filteredWatermarks.length,
+      frames: filteredFrames.length,
+      presets: catastrophePresets.length
+    };
+
     assetPanel.innerHTML = `
-      <section class="library-section">
-        <div class="section-ribbon">fonds acides</div>
-        <div class="mini-actions">
-          <button class="mini-button" data-action="remove-background">Fond vide</button>
-          <button class="mini-button" data-action="import-background">Importer fond</button>
+      <section class="library-toolbar">
+        <div class="section-ribbon">jukebox des assets</div>
+        <div class="library-search-row">
+          <input
+            class="library-search"
+            type="search"
+            placeholder="chercher dolphin, vip, glitter, preview..."
+            value="${escapeAttribute(libraryUi.query || "")}"
+            data-library-input="query"
+          >
+          <button class="mini-button" data-library-action="clear-query">Vider</button>
         </div>
-        <div class="asset-grid asset-grid-backgrounds">
-          ${this.manifest.backgrounds.map((asset) => this.renderAssetCard(asset, "pick-background")).join("")}
+        <div class="library-tabs">
+          ${this.renderLibraryTab("all", "Tout", totals.all, category)}
+          ${this.renderLibraryTab("backgrounds", "Fonds", totals.backgrounds, category)}
+          ${this.renderLibraryTab("stickers", "Stickers", totals.stickers, category)}
+          ${this.renderLibraryTab("watermarks", "Watermarks", totals.watermarks, category)}
+          ${this.renderLibraryTab("frames", "Cadres", totals.frames, category)}
+          ${this.renderLibraryTab("presets", "Presets", totals.presets, category)}
+        </div>
+        ${(category === "all" || category === "stickers") ? `
+          <div class="library-subtabs">
+            ${this.renderStickerTab("all", "tout le zoo", visibleStickerCount, stickerGroup)}
+            ${this.renderStickerTab("animals", "animaux", stickerBuckets.find((item) => item.key === "animals")?.items.length || 0, stickerGroup)}
+            ${this.renderStickerTab("love", "love/glitter", stickerBuckets.find((item) => item.key === "love")?.items.length || 0, stickerGroup)}
+            ${this.renderStickerTab("text", "textes/badges", stickerBuckets.find((item) => item.key === "text")?.items.length || 0, stickerGroup)}
+            ${this.renderStickerTab("web", "emo/webcore", stickerBuckets.find((item) => item.key === "web")?.items.length || 0, stickerGroup)}
+          </div>
+        ` : ""}
+        <div class="library-stats">
+          <span>${totals.all} trucs visibles</span>
+          <span>${query ? `filtre: ${escapeHtml(query)}` : "aucun filtre"}</span>
         </div>
       </section>
 
+      ${category === "all" || category === "backgrounds" ? `
       <section class="library-section">
-        <div class="section-ribbon">stickers maudits</div>
-        <div class="mini-actions">
-          <button class="mini-button" data-action="import-sticker">Importer PNG</button>
+        ${this.renderSectionHeader("backgrounds", "fonds acides", filteredBackgrounds.length, collapsed.backgrounds)}
+        <div class="library-section-body ${collapsed.backgrounds ? "is-collapsed" : ""}">
+          <div class="mini-actions">
+            <button class="mini-button" data-action="remove-background">Fond vide</button>
+            <button class="mini-button" data-action="import-background">Importer fond</button>
+          </div>
+          <div class="asset-grid asset-grid-backgrounds">
+            ${filteredBackgrounds.map((asset) => this.renderAssetCard(asset, "pick-background")).join("") || this.renderNoResult()}
+          </div>
         </div>
+      </section>` : ""}
+
+      ${category === "all" || category === "stickers" ? `
+      <section class="library-section">
+        ${this.renderSectionHeader("stickers", "stickers maudits", visibleStickerCount, collapsed.stickers)}
+        <div class="library-section-body ${collapsed.stickers ? "is-collapsed" : ""}">
+          <div class="mini-actions">
+            <button class="mini-button" data-action="import-sticker">Importer PNG</button>
+          </div>
+          ${visibleStickerBuckets.map((bucket) => this.renderStickerBucket(bucket)).join("") || this.renderNoResult("Rien ne matche ce filtre.")}
+        </div>
+      </section>` : ""}
+
+      ${category === "all" || category === "watermarks" ? `
+      <section class="library-section">
+        ${this.renderSectionHeader("watermarks", "watermarks douteux", filteredWatermarks.length, collapsed.watermarks)}
+        <div class="library-section-body ${collapsed.watermarks ? "is-collapsed" : ""}">
+          <div class="mini-actions">
+            <button class="mini-button" data-action="add-watermark-text">Ajouter watermark texte</button>
+          </div>
+          <div class="asset-grid">
+            ${filteredWatermarks.map((asset) => this.renderAssetCard(asset, "add-watermark-image")).join("") || this.renderNoResult()}
+          </div>
+          <div class="preset-chip-list">
+            ${watermarkTextPresets
+              .filter((preset) => preset.toLowerCase().includes(query) || !query)
+              .map(
+                (preset) =>
+                  `<button class="preset-chip" data-action="add-watermark-text" data-text="${preset}">${preset}</button>`
+              )
+              .join("")}
+          </div>
+        </div>
+      </section>` : ""}
+
+      ${category === "all" || category === "frames" ? `
+      <section class="library-section">
+        ${this.renderSectionHeader("frames", "cadres infects", filteredFrames.length, collapsed.frames)}
+        <div class="library-section-body ${collapsed.frames ? "is-collapsed" : ""}">
+          <div class="mini-actions">
+            <button class="mini-button" data-action="remove-frame">Retirer cadre</button>
+          </div>
+          <div class="asset-grid">
+            ${filteredFrames.map((asset) => this.renderAssetCard(asset, "pick-frame")).join("") || this.renderNoResult()}
+          </div>
+        </div>
+      </section>` : ""}
+
+      ${category === "all" || category === "presets" ? `
+      <section class="library-section">
+        ${this.renderSectionHeader("presets", "catastrophes prêtes", catastrophePresets.length, collapsed.presets)}
+        <div class="library-section-body ${collapsed.presets ? "is-collapsed" : ""}">
+          <div class="preset-stack">
+            ${catastrophePresets
+              .filter((preset) => preset.label.toLowerCase().includes(query) || !query)
+              .map(
+                (preset) =>
+                  `<button class="catastrophe-button" data-action="apply-catastrophe" data-preset="${preset.label}">${preset.label}</button>`
+              )
+              .join("") || this.renderNoResult()}
+          </div>
+        </div>
+      </section>` : ""}
+    `;
+  }
+
+  renderLibraryTab(key, label, count, activeKey) {
+    return `
+      <button class="library-tab ${key === activeKey ? "is-active" : ""}" data-library-category="${key}">
+        <span>${label}</span>
+        <b>${count}</b>
+      </button>
+    `;
+  }
+
+  renderStickerTab(key, label, count, activeKey) {
+    return `
+      <button class="library-subtab ${key === activeKey ? "is-active" : ""}" data-library-sticker-group="${key}">
+        <span>${label}</span>
+        <b>${count}</b>
+      </button>
+    `;
+  }
+
+  renderSectionHeader(key, label, count, collapsed) {
+    return `
+      <div class="library-section-head">
+        <div class="section-ribbon">${label}</div>
+        <button class="library-collapse-toggle" data-library-toggle="${key}">
+          <span>${count}</span>
+          <b>${collapsed ? "ouvrir" : "plier"}</b>
+        </button>
+      </div>
+    `;
+  }
+
+  renderStickerBucket(bucket) {
+    return `
+      <div class="sticker-bucket">
+        <div class="sticker-bucket-title">${bucket.label} <span>${bucket.items.length}</span></div>
         <div class="asset-grid">
-          ${this.manifest.stickers.map((asset) => this.renderAssetCard(asset, "add-sticker")).join("")}
+          ${bucket.items.map((asset) => this.renderAssetCard(asset, "add-sticker")).join("")}
         </div>
-      </section>
-
-      <section class="library-section">
-        <div class="section-ribbon">watermarks douteux</div>
-        <div class="mini-actions">
-          <button class="mini-button" data-action="add-watermark-text">Ajouter watermark texte</button>
-        </div>
-        <div class="asset-grid">
-          ${this.manifest.watermarks.map((asset) => this.renderAssetCard(asset, "add-watermark-image")).join("")}
-        </div>
-        <div class="preset-chip-list">
-          ${watermarkTextPresets
-            .map(
-              (preset) =>
-                `<button class="preset-chip" data-action="add-watermark-text" data-text="${preset}">${preset}</button>`
-            )
-            .join("")}
-        </div>
-      </section>
-
-      <section class="library-section">
-        <div class="section-ribbon">cadres infects</div>
-        <div class="mini-actions">
-          <button class="mini-button" data-action="remove-frame">Retirer cadre</button>
-        </div>
-        <div class="asset-grid">
-          ${this.manifest.frames.map((asset) => this.renderAssetCard(asset, "pick-frame")).join("")}
-        </div>
-      </section>
-
-      <section class="library-section">
-        <div class="section-ribbon">catastrophes prêtes</div>
-        <div class="preset-stack">
-          ${catastrophePresets
-            .map(
-              (preset) =>
-                `<button class="catastrophe-button" data-action="apply-catastrophe" data-preset="${preset.label}">${preset.label}</button>`
-            )
-            .join("")}
-        </div>
-      </section>
+      </div>
     `;
   }
 
   renderAssetCard(asset, action) {
     return `
-      <button class="asset-card" data-action="${action}" data-id="${asset.id}">
+      <button class="asset-card" data-action="${action}" data-id="${asset.id}" title="${asset.label}">
         <span class="asset-thumb" style="background-image:url('${asset.src}')"></span>
         <span class="asset-name">${asset.label}</span>
       </button>
     `;
+  }
+
+  renderNoResult(text = "Aucun asset ici pour l'instant.") {
+    return `<div class="library-empty">${text}</div>`;
+  }
+
+  filterAssets(assets, query) {
+    if (!query) {
+      return assets;
+    }
+    return assets.filter((asset) => `${asset.label} ${asset.id}`.toLowerCase().includes(query));
+  }
+
+  groupStickers(stickers) {
+    const buckets = [
+      { key: "animals", label: "animaux glitter", items: [] },
+      { key: "love", label: "love & deco", items: [] },
+      { key: "text", label: "textes & badges", items: [] },
+      { key: "web", label: "emo & vieux web", items: [] }
+    ];
+
+    for (const asset of stickers) {
+      const bucket = buckets.find((item) => item.key === this.getStickerBucketKey(asset)) || buckets[1];
+      bucket.items.push(asset);
+    }
+
+    return buckets;
+  }
+
+  getStickerBucketKey(asset) {
+    const token = `${asset.id} ${asset.label}`.toLowerCase();
+    if (/(dolphin|kitty|cat|bunny|teddy|paw|tiger|angel|unicorn|butterfly|bear)/.test(token)) {
+      return "animals";
+    }
+    if (/(vip|badge|best|friend|asv|babe|cute|lol|mdr|tkt|love|kiss|miss|princess|scene|hot|so glam|do not copy|bg 2)/.test(token)) {
+      return "text";
+    }
+    if (/(emo|broken|emoji|blinkie|xd|wink|shock|smile|hater)/.test(token)) {
+      return "web";
+    }
+    return "love";
   }
 
   render(state, history) {
@@ -486,4 +648,12 @@ function normalizeColorValue(value) {
   }
   const [r, g, b] = rgba.map((channel) => Number(channel).toString(16).padStart(2, "0"));
   return `#${r}${g}${b}`;
+}
+
+function escapeAttribute(text = "") {
+  return text.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("<", "&lt;");
+}
+
+function escapeHtml(text = "") {
+  return text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }

@@ -124,9 +124,42 @@ export const assetManifest = {
     ["wm-sample-center", "Sample Center", "wm_sample_center.png"]
   ]),
   fonts: [
-    { id: "comic-sans", label: "Comic Sans MS", family: "Comic Sans MS, Comic Sans, cursive", type: "system", loadFamily: "Comic Sans MS" },
-    { id: "impact", label: "Impact", family: "Impact, Haettenschweiler, Arial Black, sans-serif", type: "system", loadFamily: "Impact" },
-    { id: "papyrus", label: "Papyrus", family: "Papyrus, fantasy", type: "system", loadFamily: "Papyrus" },
+    {
+      id: "comic-sans-local",
+      label: "Comic Sans MS",
+      family: "JpegCore Comic Sans, Comic Sans MS, Comic Sans, cursive",
+      type: "file",
+      src: "assets/fonts/ComicSansMS.ttf",
+      loadFamily: "JpegCore Comic Sans",
+      fontFaceFamily: "JpegCore Comic Sans"
+    },
+    {
+      id: "impact-local",
+      label: "Impact LT Std",
+      family: "JpegCore Impact, Impact, Haettenschweiler, Arial Black, sans-serif",
+      type: "file",
+      src: "assets/fonts/ImpactLTStd.ttf",
+      loadFamily: "JpegCore Impact",
+      fontFaceFamily: "JpegCore Impact"
+    },
+    {
+      id: "papyrus-local",
+      label: "Papyrus",
+      family: "JpegCore Papyrus, Papyrus, fantasy",
+      type: "file",
+      src: "assets/fonts/papyrus.ttf",
+      loadFamily: "JpegCore Papyrus",
+      fontFaceFamily: "JpegCore Papyrus"
+    },
+    {
+      id: "times-local",
+      label: "Times New Drama",
+      family: "JpegCore Times, Times New Roman, Times, serif",
+      type: "file",
+      src: "assets/fonts/times.ttf",
+      loadFamily: "JpegCore Times",
+      fontFaceFamily: "JpegCore Times"
+    },
     { id: "brush", label: "Brush Script MT", family: "Brush Script MT, cursive", type: "system", loadFamily: "Brush Script MT" },
     { id: "verdana", label: "Verdana", family: "Verdana, Geneva, sans-serif", type: "system", loadFamily: "Verdana" },
     { id: "arial-black", label: "Arial Black", family: "Arial Black, Gadget, sans-serif", type: "system", loadFamily: "Arial Black" },

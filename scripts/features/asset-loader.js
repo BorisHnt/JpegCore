@@ -25,16 +25,25 @@ export class AssetLoader {
     const customFonts = this.manifest.fonts.filter((font) => font.type === "file" && font.src);
     await Promise.all(
       customFonts.map(async (font) => {
-        const fontFace = new FontFace(font.label, `url(${font.src})`);
-        const loaded = await fontFace.load();
-        document.fonts.add(loaded);
+        try {
+          const fontFamily = font.fontFaceFamily || font.loadFamily || font.label;
+          const fontFace = new FontFace(fontFamily, `url(${font.src})`);
+          const loaded = await fontFace.load();
+          document.fonts.add(loaded);
+        } catch (error) {
+          console.warn("Font file load skipped:", font.label, error);
+        }
       })
     );
 
     await Promise.all(
       this.manifest.fonts
         .filter((font) => font.loadFamily)
-        .map((font) => document.fonts.load(`16px ${font.loadFamily}`))
+        .map((font) =>
+          document.fonts.load(`16px ${font.loadFamily}`).catch((error) => {
+            console.warn("Font family preload skipped:", font.loadFamily, error);
+          })
+        )
     );
 
     await document.fonts.ready;
@@ -53,7 +62,10 @@ export class AssetLoader {
       link.href = href;
       link.dataset.fontHref = href;
       link.onload = () => resolve();
-      link.onerror = reject;
+      link.onerror = () => {
+        console.warn("Remote font stylesheet failed:", href);
+        resolve();
+      };
       document.head.append(link);
     });
   }
