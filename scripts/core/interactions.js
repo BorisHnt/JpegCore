@@ -5,7 +5,11 @@ const HANDLE_META = {
   nw: { x: -1, y: -1 },
   ne: { x: 1, y: -1 },
   sw: { x: -1, y: 1 },
-  se: { x: 1, y: 1 }
+  se: { x: 1, y: 1 },
+  n: { x: 0, y: -1 },
+  e: { x: 1, y: 0 },
+  s: { x: 0, y: 1 },
+  w: { x: -1, y: 0 }
 };
 
 export class StageInteractions {
@@ -13,6 +17,7 @@ export class StageInteractions {
     this.sceneStage = sceneStage;
     this.app = app;
     this.active = null;
+    this.dragThreshold = 4;
   }
 
   bind() {
@@ -23,6 +28,15 @@ export class StageInteractions {
   }
 
   onPointerDown(event) {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const lockButton = event.target.closest("[data-layer-lock-button]");
+    if (lockButton) {
+      return;
+    }
+
     const handle = event.target.closest("[data-handle]");
     const layerNode = event.target.closest("[data-layer-id]");
     if (handle && layerNode) {
@@ -31,13 +45,17 @@ export class StageInteractions {
       if (!layer || layer.locked || layer.id === "background" || layer.id === "frame") {
         return;
       }
+      const handleType = handle.dataset.handle;
       this.active = {
-        mode: handle.dataset.handle === "rotate" ? "rotate" : "resize",
-        handle: handle.dataset.handle,
+        mode: handleType === "rotate" ? "rotate" : handleType === "move" ? "move" : "resize",
+        handle: handleType,
         layerId,
+        pointerId: event.pointerId,
         startPoint: this.getPoint(event),
-        startLayer: { ...layer }
+        startLayer: { ...layer },
+        changed: false
       };
+      event.currentTarget.setPointerCapture?.(event.pointerId);
       event.preventDefault();
       return;
     }
@@ -46,15 +64,24 @@ export class StageInteractions {
       const layerId = layerNode.dataset.layerId;
       this.app.setSelection(layerId);
       const layer = getLayerById(this.app.state, layerId);
-      if (!layer || layer.locked || layer.id === "background" || layer.id === "frame") {
+      if (!layer || layer.id === "background" || layer.id === "frame") {
+        event.preventDefault();
+        return;
+      }
+
+      if (layer.locked) {
+        event.preventDefault();
         return;
       }
       this.active = {
         mode: "move",
         layerId,
+        pointerId: event.pointerId,
         startPoint: this.getPoint(event),
-        startLayer: { ...layer }
+        startLayer: { ...layer },
+        changed: false
       };
+      event.currentTarget.setPointerCapture?.(event.pointerId);
       event.preventDefault();
       return;
     }
@@ -70,13 +97,18 @@ export class StageInteractions {
     const point = this.getPoint(event);
     const dx = point.x - this.active.startPoint.x;
     const dy = point.y - this.active.startPoint.y;
+    const movedEnough = Math.hypot(dx, dy) >= this.dragThreshold;
 
     if (this.active.mode === "move") {
+      if (!movedEnough) {
+        return;
+      }
       this.app.previewMutation((state) => {
         const layer = getLayerById(state, this.active.layerId);
         layer.x = this.active.startLayer.x + dx;
         layer.y = this.active.startLayer.y + dy;
       });
+      this.active.changed = true;
       return;
     }
 
@@ -89,8 +121,11 @@ export class StageInteractions {
       const delta = ((nextAngle - startAngle) * 180) / Math.PI;
       this.app.previewMutation((state) => {
         const layer = getLayerById(state, this.active.layerId);
-        layer.rotation = this.active.startLayer.rotation + delta;
+        layer.rotation = event.shiftKey
+          ? Math.round((this.active.startLayer.rotation + delta) / 15) * 15
+          : this.active.startLayer.rotation + delta;
       });
+      this.active.changed = true;
       return;
     }
 
@@ -99,9 +134,18 @@ export class StageInteractions {
       const angle = degreesToRadians(this.active.startLayer.rotation);
       const localDx = Math.cos(angle) * dx + Math.sin(angle) * dy;
       const localDy = -Math.sin(angle) * dx + Math.cos(angle) * dy;
+      const aspectRatio = this.active.startLayer.width / this.active.startLayer.height;
 
       let nextWidth = clamp(this.active.startLayer.width + localDx * handleMeta.x, 42, 860);
       let nextHeight = clamp(this.active.startLayer.height + localDy * handleMeta.y, 32, 860);
+
+      if (event.shiftKey) {
+        if (Math.abs(handleMeta.x) >= Math.abs(handleMeta.y)) {
+          nextHeight = clamp(nextWidth / aspectRatio, 32, 860);
+        } else {
+          nextWidth = clamp(nextHeight * aspectRatio, 42, 860);
+        }
+      }
       const widthDelta = nextWidth - this.active.startLayer.width;
       const heightDelta = nextHeight - this.active.startLayer.height;
 
@@ -120,6 +164,7 @@ export class StageInteractions {
           layer.fontSize = clamp((this.active.startLayer.fontSize * nextWidth) / this.active.startLayer.width, 16, 220);
         }
       });
+      this.active.changed = true;
     }
   }
 
@@ -127,12 +172,15 @@ export class StageInteractions {
     if (!this.active) {
       return;
     }
+    this.sceneStage.releasePointerCapture?.(this.active.pointerId);
     const labels = {
       move: "Déplacer calque",
       resize: "Redimensionner calque",
       rotate: "Pivoter calque"
     };
-    this.app.commitHistory(labels[this.active.mode] || "Modifier calque");
+    if (this.active.changed) {
+      this.app.commitHistory(labels[this.active.mode] || "Modifier calque");
+    }
     this.active = null;
   }
 

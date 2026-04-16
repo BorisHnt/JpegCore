@@ -242,12 +242,20 @@ class JpegCoreApp {
     if (!this.state.selectionId) {
       return;
     }
+    this.toggleLockById(this.state.selectionId);
+  }
+
+  toggleLockById(layerId) {
+    if (!layerId) {
+      return;
+    }
     this.applyMutation("Verrouiller calque", (state) => {
-      const layer = getLayerById(state, state.selectionId);
+      const layer = getLayerById(state, layerId);
       if (!layer || layer.id === "background" || layer.id === "frame") {
         return;
       }
       layer.locked = !layer.locked;
+      state.selectionId = layer.id;
     });
   }
 
@@ -412,6 +420,7 @@ class JpegCoreApp {
     if (action === "duplicate-selection") this.duplicateSelection();
     if (action === "delete-selection") this.deleteSelection();
     if (action === "toggle-lock") this.toggleLockSelection();
+    if (action === "toggle-lock-layer") this.toggleLockById(id);
     if (action === "move-up") this.moveSelection(1);
     if (action === "move-down") this.moveSelection(-1);
     if (action === "select-layer") this.setSelection(id);

@@ -113,6 +113,7 @@ export function makeText({
     fontWeight: "700",
     fontStyle: "normal",
     align: "center",
+    lineCount: 0,
     strokeColor: "#ff00cc",
     strokeWidth: 5,
     shadowColor: "rgba(0, 0, 0, 0.65)",

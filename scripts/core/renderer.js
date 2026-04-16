@@ -1,6 +1,6 @@
 import { catastrophePresets, watermarkTextPresets } from "../data/presets.js";
 import { getLayerById, getVisibleLayerList } from "../state/store.js";
-import { buildTextPatternDataUri, getStageFilter, getTextMarkup, getTextShadowCss } from "./scene.js";
+import { buildTextPatternDataUri, getStageFilter, getTextLines, getTextMarkup, getTextShadowCss } from "./scene.js";
 
 export class AppRenderer {
   constructor(refs, manifest) {
@@ -376,7 +376,7 @@ export class AppRenderer {
           text-shadow:${textShadow || "none"};
         "
       >
-        ${getTextMarkup(layer.text)}
+        ${getTextMarkup(layer)}
       </div>
       ${proxy ? "<span class='proxy-grid'></span>" : ""}
     `;
@@ -385,9 +385,14 @@ export class AppRenderer {
   renderHandles() {
     return `
       <span class="handle handle-nw" data-handle="nw"></span>
+      <span class="handle handle-n" data-handle="n"></span>
       <span class="handle handle-ne" data-handle="ne"></span>
+      <span class="handle handle-e" data-handle="e"></span>
       <span class="handle handle-sw" data-handle="sw"></span>
+      <span class="handle handle-s" data-handle="s"></span>
       <span class="handle handle-se" data-handle="se"></span>
+      <span class="handle handle-w" data-handle="w"></span>
+      <span class="move-handle" data-handle="move">drag</span>
       <span class="handle handle-rotate" data-handle="rotate"></span>
     `;
   }
@@ -522,6 +527,7 @@ export class AppRenderer {
           </div>
           <div class="field-grid two-cols">
             ${this.numberField("fontSize", "Taille", selection.fontSize)}
+            ${this.numberField("lineCount", "Lignes", selection.lineCount || 0)}
             <div class="field-row">
               <label>Alignement</label>
               <select data-selection-prop="align">
@@ -548,6 +554,7 @@ export class AppRenderer {
             }
           </div>
         </div>
+        <p class="tiny-copy">`Lignes`: `0` = auto, sinon le texte est réparti sur ce nombre de lignes.</p>
       `;
     }
 
@@ -593,11 +600,17 @@ export class AppRenderer {
           ${layers
             .map(
               (layer) => `
-                <button class="layer-row ${layer.id === state.selectionId ? "is-selected" : ""}" data-action="select-layer" data-id="${layer.id}">
-                  <span class="layer-tag">${layer.type}</span>
-                  <span class="layer-label">${layer.label}</span>
-                  ${layer.locked ? "<span class='lock-indicator'>lock</span>" : ""}
-                </button>
+                <div class="layer-row ${layer.id === state.selectionId ? "is-selected" : ""}">
+                  <button class="layer-main-hit" data-action="select-layer" data-id="${layer.id}">
+                    <span class="layer-tag">${layer.type}</span>
+                    <span class="layer-label">${layer.label}</span>
+                  </button>
+                  ${
+                    layer.type === "background" || layer.type === "frame"
+                      ? "<span class='lock-indicator'>fixe</span>"
+                      : `<button class="layer-lock-button ${layer.locked ? "is-locked" : ""}" data-action="toggle-lock-layer" data-id="${layer.id}" data-layer-lock-button>${layer.locked ? "unlock" : "lock"}</button>`
+                  }
+                </div>
               `
             )
             .join("")}

@@ -1,5 +1,8 @@
 import { degreesToRadians, escapeHtml } from "../utils/helpers.js";
 
+const measureCanvas = document.createElement("canvas");
+const measureContext = measureCanvas.getContext("2d");
+
 export function getStageFilter(effects) {
   return `contrast(${effects.contrast}%) saturate(${effects.saturate}%) hue-rotate(${effects.hueRotate}deg)`;
 }
@@ -18,18 +21,25 @@ export function getTextShadowCss(layer) {
   return shadows.join(", ");
 }
 
-export function getTextMarkup(text) {
-  return escapeHtml(text).replaceAll("\n", "<br>");
+export function getTextMarkup(layer) {
+  return getTextLines(layer).map((line) => escapeHtml(line)).join("<br>");
 }
 
 export function buildTextPatternDataUri(layer) {
+  const textSpans = getTextLines(layer)
+    .map(
+      (line, index) => `
+        <tspan x="50%" dy="${index === 0 ? "0" : "1.05em"}">${escapeXml(line)}</tspan>
+      `
+    )
+    .join("");
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(60, Math.round(layer.width))}" height="${Math.max(40, Math.round(layer.height))}" viewBox="0 0 ${Math.max(60, Math.round(layer.width))} ${Math.max(40, Math.round(layer.height))}">
       <text
         x="50%"
-        y="58%"
-        dominant-baseline="middle"
+        y="50%"
         text-anchor="middle"
+        dominant-baseline="middle"
         font-family="${layer.fontFamily.replaceAll("\"", "'")}"
         font-size="${Math.round(layer.fontSize)}"
         font-weight="${layer.fontWeight}"
@@ -37,7 +47,7 @@ export function buildTextPatternDataUri(layer) {
         fill="${layer.color}"
         stroke="${layer.strokeColor || "transparent"}"
         stroke-width="${layer.strokeWidth || 0}"
-      >${escapeXml(layer.text)}</text>
+      >${textSpans}</text>
     </svg>
   `.trim();
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -69,6 +79,63 @@ export function wrapText(ctx, text, maxWidth) {
     lines.push(current);
   }
   return lines.filter((line, index, arr) => !(line === "" && index === arr.length - 1));
+}
+
+export function getTextLines(layer) {
+  const fontToken = `${layer.fontStyle === "italic" ? "italic " : ""}${layer.fontWeight === "700" ? "700 " : ""}${layer.fontSize}px ${layer.fontFamily}`;
+  measureContext.font = fontToken;
+  const maxWidth = Math.max(layer.width - 12, 40);
+  const forcedLineCount = Math.max(0, Math.round(Number(layer.lineCount) || 0));
+
+  if (forcedLineCount <= 0) {
+    return wrapText(measureContext, layer.text, maxWidth);
+  }
+
+  return splitIntoForcedLines(measureContext, layer.text, maxWidth, forcedLineCount);
+}
+
+function splitIntoForcedLines(ctx, text, maxWidth, requestedCount) {
+  const words = text.replaceAll("\n", " ").trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) {
+    return [""];
+  }
+
+  const targetCount = Math.min(requestedCount, words.length);
+  if (targetCount === 1) {
+    return [words.join(" ")];
+  }
+
+  const totalWidth = ctx.measureText(words.join(" ")).width;
+  const idealWidth = Math.min(maxWidth, totalWidth / targetCount || maxWidth);
+  const remaining = [...words];
+  const lines = [];
+
+  for (let index = 0; index < targetCount; index += 1) {
+    const lineSlotsLeft = targetCount - index;
+    if (lineSlotsLeft === 1) {
+      lines.push(remaining.join(" "));
+      break;
+    }
+
+    let current = remaining.shift() || "";
+    while (remaining.length >= lineSlotsLeft - 1) {
+      const candidate = `${current} ${remaining[0]}`;
+      const currentWidth = ctx.measureText(current).width;
+      const candidateWidth = ctx.measureText(candidate).width;
+      const tooWideForBox = candidateWidth > maxWidth && currentWidth <= maxWidth;
+      const tooWideForBalance = candidateWidth > idealWidth * 1.1 && currentWidth >= idealWidth * 0.55;
+
+      if (tooWideForBox || tooWideForBalance) {
+        break;
+      }
+
+      current = candidate;
+      remaining.shift();
+    }
+    lines.push(current);
+  }
+
+  return lines;
 }
 
 export function drawFittedImage(ctx, image, targetWidth, targetHeight, fit = "cover") {
@@ -122,7 +189,7 @@ export function drawTextLayer(ctx, layer) {
   ctx.rotate(degreesToRadians(layer.rotation));
   ctx.globalAlpha = layer.opacity;
   ctx.font = fontToken;
-  const lines = wrapText(ctx, layer.text, Math.max(layer.width - 12, 40));
+  const lines = getTextLines(layer);
   const lineHeight = layer.fontSize * 1.05;
   const totalHeight = lineHeight * lines.length;
   ctx.textBaseline = "middle";
