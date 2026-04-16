@@ -124,11 +124,107 @@ export const assetManifest = {
     ["wm-sample-center", "Sample Center", "wm_sample_center.png"]
   ]),
   fonts: [
-    { id: "comic-sans", label: "Comic Sans MS", family: "Comic Sans MS, Comic Sans, cursive", type: "system" },
-    { id: "impact", label: "Impact", family: "Impact, Haettenschweiler, Arial Black, sans-serif", type: "system" },
-    { id: "papyrus", label: "Papyrus", family: "Papyrus, fantasy", type: "system" },
-    { id: "brush", label: "Brush Script MT", family: "Brush Script MT, cursive", type: "system" },
-    { id: "verdana", label: "Verdana", family: "Verdana, Geneva, sans-serif", type: "system" },
-    { id: "arial-black", label: "Arial Black", family: "Arial Black, Gadget, sans-serif", type: "system" }
+    { id: "comic-sans", label: "Comic Sans MS", family: "Comic Sans MS, Comic Sans, cursive", type: "system", loadFamily: "Comic Sans MS" },
+    { id: "impact", label: "Impact", family: "Impact, Haettenschweiler, Arial Black, sans-serif", type: "system", loadFamily: "Impact" },
+    { id: "papyrus", label: "Papyrus", family: "Papyrus, fantasy", type: "system", loadFamily: "Papyrus" },
+    { id: "brush", label: "Brush Script MT", family: "Brush Script MT, cursive", type: "system", loadFamily: "Brush Script MT" },
+    { id: "verdana", label: "Verdana", family: "Verdana, Geneva, sans-serif", type: "system", loadFamily: "Verdana" },
+    { id: "arial-black", label: "Arial Black", family: "Arial Black, Gadget, sans-serif", type: "system", loadFamily: "Arial Black" },
+    {
+      id: "bangers",
+      label: "Bangers",
+      family: "Bangers, cursive",
+      type: "google",
+      loadFamily: "Bangers",
+      href: "https://fonts.googleapis.com/css2?family=Bangers&display=swap"
+    },
+    {
+      id: "creepster",
+      label: "Creepster",
+      family: "Creepster, cursive",
+      type: "google",
+      loadFamily: "Creepster",
+      href: "https://fonts.googleapis.com/css2?family=Creepster&display=swap"
+    },
+    {
+      id: "monoton",
+      label: "Monoton",
+      family: "Monoton, cursive",
+      type: "google",
+      loadFamily: "Monoton",
+      href: "https://fonts.googleapis.com/css2?family=Monoton&display=swap"
+    },
+    {
+      id: "fascinate-inline",
+      label: "Fascinate Inline",
+      family: "Fascinate Inline, cursive",
+      type: "google",
+      loadFamily: "Fascinate Inline",
+      href: "https://fonts.googleapis.com/css2?family=Fascinate+Inline&display=swap"
+    },
+    {
+      id: "rubik-puddles",
+      label: "Rubik Puddles",
+      family: "Rubik Puddles, cursive",
+      type: "google",
+      loadFamily: "Rubik Puddles",
+      href: "https://fonts.googleapis.com/css2?family=Rubik+Puddles&display=swap"
+    },
+    {
+      id: "henny-penny",
+      label: "Henny Penny",
+      family: "Henny Penny, cursive",
+      type: "google",
+      loadFamily: "Henny Penny",
+      href: "https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap"
+    },
+    {
+      id: "barriecito",
+      label: "Barriecito",
+      family: "Barriecito, cursive",
+      type: "google",
+      loadFamily: "Barriecito",
+      href: "https://fonts.googleapis.com/css2?family=Barriecito&display=swap"
+    },
+    {
+      id: "ewert",
+      label: "Ewert",
+      family: "Ewert, cursive",
+      type: "google",
+      loadFamily: "Ewert",
+      href: "https://fonts.googleapis.com/css2?family=Ewert&display=swap"
+    },
+    {
+      id: "frijole",
+      label: "Frijole",
+      family: "Frijole, cursive",
+      type: "google",
+      loadFamily: "Frijole",
+      href: "https://fonts.googleapis.com/css2?family=Frijole&display=swap"
+    },
+    {
+      id: "chewy",
+      label: "Chewy",
+      family: "Chewy, cursive",
+      type: "google",
+      loadFamily: "Chewy",
+      href: "https://fonts.googleapis.com/css2?family=Chewy&display=swap"
+    },
+    {
+      id: "shrikhand",
+      label: "Shrikhand",
+      family: "Shrikhand, cursive",
+      type: "google",
+      loadFamily: "Shrikhand",
+      href: "https://fonts.googleapis.com/css2?family=Shrikhand&display=swap"
+    },
+    {
+      id: "press-start-2p",
+      label: "Press Start 2P",
+      family: "Press Start 2P, cursive",
+      type: "google",
+      loadFamily: "Press Start 2P",
+      href: "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    }
   ]
 };
