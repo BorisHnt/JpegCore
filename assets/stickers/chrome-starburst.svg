@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
+  <defs>
+    <linearGradient id="chrome" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="18%" stop-color="#7da0ff"/>
+      <stop offset="36%" stop-color="#ffffff"/>
+      <stop offset="58%" stop-color="#6b6b6b"/>
+      <stop offset="80%" stop-color="#f6fbff"/>
+      <stop offset="100%" stop-color="#a8d0ff"/>
+    </linearGradient>
+  </defs>
+  <path d="M110 12l24 46 52-10-28 44 50 18-50 18 28 44-52-10-24 46-24-46-52 10 28-44-50-18 50-18-28-44 52 10z" fill="url(#chrome)" stroke="#fff" stroke-width="7" stroke-linejoin="round"/>
+  <circle cx="110" cy="110" r="26" fill="#ff5ebe" stroke="#fff" stroke-width="6"/>
+  <text x="110" y="118" text-anchor="middle" font-family="Arial Black, Gadget, sans-serif" font-size="20" fill="#fff79e">VIP</text>
+</svg>

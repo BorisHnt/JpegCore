@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 170">
+  <defs>
+    <linearGradient id="warn" x1="0" x2="1">
+      <stop offset="0%" stop-color="#fff9a3"/>
+      <stop offset="100%" stop-color="#ff347c"/>
+    </linearGradient>
+  </defs>
+  <rect x="14" y="14" width="432" height="142" rx="16" fill="rgba(255,255,255,0.08)" stroke="url(#warn)" stroke-width="10"/>
+  <text x="230" y="78" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="48" fill="#ffffff" stroke="#ff2f7b" stroke-width="4">DO NOT STEAL</text>
+  <text x="230" y="118" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive" font-size="26" fill="#fff699">fan edit preview</text>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220">
+  <defs>
+    <linearGradient id="mane" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ff5ab6"/>
+      <stop offset="35%" stop-color="#fff476"/>
+      <stop offset="68%" stop-color="#66ebff"/>
+      <stop offset="100%" stop-color="#a56dff"/>
+    </linearGradient>
+  </defs>
+  <path d="M52 164c0-54 38-92 98-92 36 0 58 14 74 36-15 1-25 7-32 15 18 6 28 20 28 39 0 26-20 46-52 46H88c-20 0-36-17-36-44z" fill="#fffdfd" stroke="#fff" stroke-width="8"/>
+  <path d="M88 90c11-34 36-56 68-66-8 20-3 34 12 45-35 2-58 13-80 40z" fill="url(#mane)" stroke="#fff" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M162 53l16-34 18 28z" fill="#ffe77a" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M100 108c8-16 24-24 48-24 17 0 31 4 42 11-8 0-16 7-19 18 12 3 20 12 20 24 0 18-14 30-34 30h-54c-18 0-30-12-30-28 0-16 10-28 27-31z" fill="#fff" opacity=".55"/>
+  <circle cx="130" cy="128" r="8" fill="#202030"/>
+  <path d="M150 119c9 3 14 8 18 16" fill="none" stroke="#202030" stroke-width="5" stroke-linecap="round"/>
+  <path d="M118 147c7 7 13 9 19 9s12-2 19-9" fill="none" stroke="#ff4aa8" stroke-width="6" stroke-linecap="round"/>
+  <text x="130" y="212" text-anchor="middle" font-family="Brush Script MT, cursive" font-size="30" font-weight="700" fill="#fff98f" stroke="#ff3ca7" stroke-width="2.5">magic bg</text>
+</svg>

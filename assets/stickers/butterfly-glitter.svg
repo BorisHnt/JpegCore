@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 220">
+  <defs>
+    <linearGradient id="wingL" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff7a2"/>
+      <stop offset="45%" stop-color="#ff63c7"/>
+      <stop offset="100%" stop-color="#8300ff"/>
+    </linearGradient>
+    <linearGradient id="wingR" x1="1" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#8bfbff"/>
+      <stop offset="45%" stop-color="#ff8ce9"/>
+      <stop offset="100%" stop-color="#fff497"/>
+    </linearGradient>
+  </defs>
+  <path d="M112 98C72 22 12 26 22 84c7 42 54 49 90 28-22 21-31 51-12 78-52-4-76-41-72-77 5-45 45-88 84-91z" fill="url(#wingL)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M128 98c40-76 100-72 90-14-7 42-54 49-90 28 22 21 31 51 12 78 52-4 76-41 72-77-5-45-45-88-84-91z" fill="url(#wingR)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M120 66c-10 18-13 38-13 58 0 30 7 56 13 72 6-16 13-42 13-72 0-20-3-40-13-58z" fill="#452760"/>
+  <path d="M116 48l-16-22M124 48l16-22" stroke="#452760" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="72" cy="78" r="9" fill="#fff7c6"/>
+  <circle cx="170" cy="76" r="9" fill="#fff7c6"/>
+  <circle cx="78" cy="144" r="10" fill="#00eeff"/>
+  <circle cx="162" cy="144" r="10" fill="#ff38aa"/>
+</svg>

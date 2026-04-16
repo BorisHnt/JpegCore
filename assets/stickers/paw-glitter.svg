@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
+  <defs>
+    <linearGradient id="paw" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff6b5"/>
+      <stop offset="45%" stop-color="#ff77d0"/>
+      <stop offset="100%" stop-color="#7c00ff"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="110" cy="132" rx="42" ry="38" fill="url(#paw)" stroke="#fff" stroke-width="8"/>
+  <ellipse cx="64" cy="76" rx="18" ry="24" fill="url(#paw)" stroke="#fff" stroke-width="7"/>
+  <ellipse cx="94" cy="50" rx="18" ry="24" fill="url(#paw)" stroke="#fff" stroke-width="7"/>
+  <ellipse cx="126" cy="50" rx="18" ry="24" fill="url(#paw)" stroke="#fff" stroke-width="7"/>
+  <ellipse cx="156" cy="76" rx="18" ry="24" fill="url(#paw)" stroke="#fff" stroke-width="7"/>
+  <circle cx="54" cy="162" r="8" fill="#fff8a5"/>
+  <circle cx="164" cy="164" r="8" fill="#fff8a5"/>
+  <text x="110" y="206" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive" font-size="24" font-weight="700" fill="#fff9a6" stroke="#ff2f9e" stroke-width="2.5">miaou</text>
+</svg>

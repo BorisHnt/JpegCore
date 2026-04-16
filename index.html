@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JpegCore</title>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-card">
+        <div class="loading-logo">JpegCore</div>
+        <div class="loading-copy">compression sale en cours...</div>
+        <div class="loading-bar"><span></span></div>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <header class="site-header">
+        <div class="logo-block">
+          <div class="logo-main">JpegCore</div>
+          <div class="logo-sub">mini editor de sabotage visuel 2000s</div>
+        </div>
+        <div class="header-blurbs">
+          <span>Skyblog energy</span>
+          <span>MSN trauma</span>
+          <span>glitter legalement discutable</span>
+        </div>
+      </header>
+
+      <nav class="global-toolbar">
+        <button class="tool-button" data-action="new-project">Nouveau projet</button>
+        <button class="tool-button" data-action="import-background">Importer fond</button>
+        <button class="tool-button" data-action="import-sticker">Importer sticker</button>
+        <button class="tool-button" data-action="add-text">Ajouter texte</button>
+        <button class="tool-button" data-action="undo">Annuler</button>
+        <button class="tool-button" data-action="redo">Refaire</button>
+        <button class="tool-button danger" data-action="worsen-x1">Rendre pire x1</button>
+        <button class="tool-button danger" data-action="worsen-x3">Rendre pire x3</button>
+        <button class="tool-button danger maxed" data-action="worsen-max">Rendre pire MAX</button>
+        <button class="tool-button ghost" data-action="rerun-worsen">Re-rendre pire</button>
+        <button class="tool-button export" data-action="export-png">Exporter PNG</button>
+      </nav>
+
+      <main class="app-layout">
+        <aside class="panel left-panel">
+          <div class="panel-title">bibliothèque du mauvais goût</div>
+          <div id="asset-panel" class="panel-scroll"></div>
+        </aside>
+
+        <section class="workspace">
+          <div class="workspace-head">
+            <div class="workspace-title">zone de montage centralisée</div>
+            <div class="workspace-copy">fond en bas, watermarks au milieu, stickers et textes au-dessus, cadre tout en haut.</div>
+          </div>
+          <div id="scene-viewport" class="scene-viewport">
+            <div id="scene-stage" class="scene-stage"></div>
+          </div>
+        </section>
+
+        <aside class="panel right-panel">
+          <div class="panel-title">propriétés & calques</div>
+          <div class="panel-scroll inspector-stack">
+            <div id="properties-panel"></div>
+            <div id="layers-panel"></div>
+            <div id="history-panel"></div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <input id="background-input" type="file" accept="image/*" hidden>
+    <input id="sticker-input" type="file" accept="image/png,image/webp,image/svg+xml,image/*" hidden>
+
+    <script type="module" src="scripts/main.js"></script>
+  </body>
+</html>

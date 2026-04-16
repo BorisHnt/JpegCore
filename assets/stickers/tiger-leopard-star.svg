@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 220">
+  <defs>
+    <pattern id="spots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <rect width="28" height="28" fill="#efbb49"/>
+      <ellipse cx="8" cy="9" rx="5" ry="4" fill="#5c2a0d"/>
+      <ellipse cx="21" cy="18" rx="6" ry="4" fill="#5c2a0d"/>
+    </pattern>
+  </defs>
+  <circle cx="124" cy="122" r="70" fill="url(#spots)" stroke="#fff3cf" stroke-width="8"/>
+  <path d="M70 72L48 26l46 26zM178 72l22-46-46 26z" fill="url(#spots)" stroke="#fff3cf" stroke-width="7" stroke-linejoin="round"/>
+  <circle cx="96" cy="118" r="8" fill="#21140d"/>
+  <circle cx="152" cy="118" r="8" fill="#21140d"/>
+  <ellipse cx="124" cy="140" rx="13" ry="9" fill="#ff90c9"/>
+  <path d="M112 152c4 5 8 7 12 7s8-2 12-7" fill="none" stroke="#21140d" stroke-width="4" stroke-linecap="round"/>
+  <path d="M194 48l10 20 22 4-16 15 4 22-20-11-20 11 3-22-16-15 22-4z" fill="#fff59d" stroke="#ff49b5" stroke-width="4"/>
+  <text x="126" y="208" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="28" fill="#fff8a6" stroke="#ff2b8f" stroke-width="2.5">wild bg</text>
+</svg>

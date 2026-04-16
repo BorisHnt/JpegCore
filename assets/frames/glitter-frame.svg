@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <defs>
+    <linearGradient id="glitter" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ffe1ff"/>
+      <stop offset="25%" stop-color="#ff8eea"/>
+      <stop offset="50%" stop-color="#fff59f"/>
+      <stop offset="75%" stop-color="#7ce7ff"/>
+      <stop offset="100%" stop-color="#ff56b3"/>
+    </linearGradient>
+  </defs>
+  <rect x="18" y="18" width="864" height="864" rx="34" fill="none" stroke="url(#glitter)" stroke-width="36"/>
+  <g fill="#fff6b0">
+    <circle cx="90" cy="88" r="10"/>
+    <circle cx="812" cy="120" r="8"/>
+    <circle cx="788" cy="782" r="10"/>
+    <circle cx="112" cy="780" r="9"/>
+    <circle cx="450" cy="72" r="7"/>
+    <circle cx="118" cy="452" r="7"/>
+    <circle cx="822" cy="454" r="7"/>
+  </g>
+</svg>

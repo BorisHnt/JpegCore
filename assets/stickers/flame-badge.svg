@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
+  <defs>
+    <radialGradient id="fire" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff8a0"/>
+      <stop offset="40%" stop-color="#ffba00"/>
+      <stop offset="70%" stop-color="#ff5a00"/>
+      <stop offset="100%" stop-color="#c20000"/>
+    </radialGradient>
+  </defs>
+  <circle cx="110" cy="110" r="92" fill="#1b0035" stroke="#ffed7a" stroke-width="10"/>
+  <path d="M115 30c12 24 10 35-2 52 26-9 45 12 45 38 0 32-23 52-49 52-32 0-56-21-56-53 0-18 9-29 22-40-2 17 4 27 17 31-7-28 4-49 23-80z" fill="url(#fire)" stroke="#fff2bb" stroke-width="7" stroke-linejoin="round"/>
+  <text x="110" y="206" font-family="Verdana" font-size="22" font-weight="700" text-anchor="middle" fill="#ff7bd9">HOT</text>
+</svg>
