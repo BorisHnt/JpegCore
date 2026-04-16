@@ -38,6 +38,10 @@ class JpegCoreApp {
       stickerGroup: "all",
       collapsed: {}
     };
+    this.mobileUi = {
+      panel: null,
+      rightTab: "properties"
+    };
   }
 
   get state() {
@@ -53,11 +57,14 @@ class JpegCoreApp {
     this.seedDemo();
     this.render();
     window.addEventListener("resize", () => this.renderer.updateStageScale(this.state));
+    window.addEventListener("resize", () => this.syncMobileUiToViewport());
+    this.syncMobileUiToViewport();
     this.refs.loadingScreen.classList.add("is-hidden");
   }
 
   bindUi() {
     document.body.addEventListener("click", (event) => this.handleActionClick(event));
+    document.body.addEventListener("click", (event) => this.handleMobileClick(event));
     this.refs.assetPanel.addEventListener("click", (event) => this.handleLibraryClick(event));
     this.refs.assetPanel.addEventListener("input", (event) => this.handleLibraryInput(event));
     this.refs.propertiesPanel.addEventListener("input", (event) => this.handlePropertyInput(event));
@@ -68,6 +75,7 @@ class JpegCoreApp {
 
   renderLibraries(restoreSearchFocus = false, selectionStart = null, selectionEnd = null) {
     this.renderer.renderLibraries(this.libraryUi);
+    this.applyMobileUi();
     if (restoreSearchFocus) {
       const input = this.refs.assetPanel.querySelector("[data-library-input='query']");
       if (input) {
@@ -81,12 +89,14 @@ class JpegCoreApp {
 
   render() {
     this.renderer.render(this.state, this.history);
+    this.applyMobileUi();
   }
 
   renderStageOnly() {
     this.renderer.renderStage(this.state);
     this.renderer.renderLayers(this.state);
     this.renderer.updateStageScale(this.state);
+    this.applyMobileUi();
   }
 
   previewMutation(mutator) {
@@ -109,6 +119,10 @@ class JpegCoreApp {
     this.store.mutate((state) => {
       state.selectionId = layerId;
     });
+    if (this.isMobileViewport() && layerId && layerId !== "background" && layerId !== "frame") {
+      this.mobileUi.panel = "right";
+      this.mobileUi.rightTab = "properties";
+    }
     this.render();
   }
 
@@ -448,6 +462,63 @@ class JpegCoreApp {
     }
   }
 
+  handleMobileClick(event) {
+    const trigger = event.target.closest("[data-mobile-action], [data-mobile-right-tab]");
+    if (!trigger) {
+      return;
+    }
+
+    const tab = trigger.dataset.mobileRightTab;
+    if (tab) {
+      this.mobileUi.panel = "right";
+      this.mobileUi.rightTab = tab;
+      this.applyMobileUi();
+      return;
+    }
+
+    const action = trigger.dataset.mobileAction;
+    if (action === "open-assets") {
+      this.mobileUi.panel = this.mobileUi.panel === "left" ? null : "left";
+    }
+    if (action === "open-properties") {
+      this.mobileUi.panel = this.mobileUi.panel === "right" ? null : "right";
+      this.mobileUi.rightTab = "properties";
+    }
+    if (action === "open-layers") {
+      this.mobileUi.panel = this.mobileUi.panel === "right" ? null : "right";
+      this.mobileUi.rightTab = "layers";
+    }
+    if (action === "close-panels") {
+      this.mobileUi.panel = null;
+    }
+    this.applyMobileUi();
+  }
+
+  applyMobileUi() {
+    const isMobile = this.isMobileViewport();
+    this.refs.leftPanel.classList.toggle("is-mobile-open", isMobile && this.mobileUi.panel === "left");
+    this.refs.rightPanel.classList.toggle("is-mobile-open", isMobile && this.mobileUi.panel === "right");
+    this.refs.rightPanel.dataset.mobileRightTab = this.mobileUi.rightTab;
+    document.body.classList.toggle("mobile-panel-open", isMobile && this.mobileUi.panel !== null);
+
+    const tabButtons = this.refs.rightPanel.querySelectorAll("[data-mobile-right-tab]");
+    for (const button of tabButtons) {
+      button.classList.toggle("is-active", button.dataset.mobileRightTab === this.mobileUi.rightTab);
+    }
+  }
+
+  syncMobileUiToViewport() {
+    if (!this.isMobileViewport()) {
+      this.mobileUi.panel = null;
+      this.mobileUi.rightTab = "properties";
+    }
+    this.applyMobileUi();
+  }
+
+  isMobileViewport() {
+    return window.matchMedia("(max-width: 960px)").matches;
+  }
+
   handlePropertyInput(event) {
     const target = event.target;
     if (!(target instanceof HTMLInputElement)) {
@@ -573,6 +644,8 @@ function fileToDataUrl(file) {
 
 const refs = {
   loadingScreen: document.querySelector("#loading-screen"),
+  leftPanel: document.querySelector(".left-panel"),
+  rightPanel: document.querySelector(".right-panel"),
   assetPanel: document.querySelector("#asset-panel"),
   sceneViewport: document.querySelector("#scene-viewport"),
   sceneStage: document.querySelector("#scene-stage"),

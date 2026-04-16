@@ -160,6 +160,24 @@ export const assetManifest = {
       loadFamily: "JpegCore Times",
       fontFaceFamily: "JpegCore Times"
     },
+    {
+      id: "cute-notes-local",
+      label: "Cute Notes",
+      family: "JpegCore Cute Notes, Comic Sans MS, Comic Sans, cursive",
+      type: "file",
+      src: "assets/fonts/Cute Notes.ttf",
+      loadFamily: "JpegCore Cute Notes",
+      fontFaceFamily: "JpegCore Cute Notes"
+    },
+    {
+      id: "college-local",
+      label: "College",
+      family: "JpegCore College, Impact, Arial Black, sans-serif",
+      type: "file",
+      src: "assets/fonts/college.ttf",
+      loadFamily: "JpegCore College",
+      fontFaceFamily: "JpegCore College"
+    },
     { id: "brush", label: "Brush Script MT", family: "Brush Script MT, cursive", type: "system", loadFamily: "Brush Script MT" },
     { id: "verdana", label: "Verdana", family: "Verdana, Geneva, sans-serif", type: "system", loadFamily: "Verdana" },
     { id: "arial-black", label: "Arial Black", family: "Arial Black, Gadget, sans-serif", type: "system", loadFamily: "Arial Black" },

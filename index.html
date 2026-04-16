@@ -44,7 +44,10 @@
 
       <main class="app-layout">
         <aside class="panel left-panel">
-          <div class="panel-title">bibliothèque du mauvais goût</div>
+          <div class="panel-title panel-title-line">
+            <span>bibliothèque du mauvais goût</span>
+            <button class="panel-close-button" data-mobile-action="close-panels">fermer</button>
+          </div>
           <div id="asset-panel" class="panel-scroll"></div>
         </aside>
 
@@ -59,15 +62,33 @@
         </section>
 
         <aside class="panel right-panel">
-          <div class="panel-title">propriétés & calques</div>
+          <div class="panel-title panel-title-line">
+            <span>propriétés & calques</span>
+            <button class="panel-close-button" data-mobile-action="close-panels">fermer</button>
+          </div>
+          <div class="mobile-right-tabs">
+            <button class="mobile-right-tab is-active" data-mobile-right-tab="properties">sélection</button>
+            <button class="mobile-right-tab" data-mobile-right-tab="layers">calques</button>
+            <button class="mobile-right-tab" data-mobile-right-tab="history">historique</button>
+          </div>
           <div class="panel-scroll inspector-stack">
-            <div id="properties-panel"></div>
-            <div id="layers-panel"></div>
-            <div id="history-panel"></div>
+            <div id="properties-panel" class="mobile-tab-content mobile-tab-properties"></div>
+            <div id="layers-panel" class="mobile-tab-content mobile-tab-layers"></div>
+            <div id="history-panel" class="mobile-tab-content mobile-tab-history"></div>
           </div>
         </aside>
       </main>
     </div>
+
+    <div id="mobile-backdrop" class="mobile-backdrop" data-mobile-action="close-panels"></div>
+    <nav class="mobile-dock">
+      <button class="mobile-dock-button" data-mobile-action="open-assets">assets</button>
+      <button class="mobile-dock-button" data-mobile-action="open-properties">sélection</button>
+      <button class="mobile-dock-button" data-mobile-action="open-layers">calques</button>
+      <button class="mobile-dock-button" data-action="add-text">texte</button>
+      <button class="mobile-dock-button danger" data-action="worsen-x1">pire</button>
+      <button class="mobile-dock-button export" data-action="export-png">export</button>
+    </nav>
 
     <input id="background-input" type="file" accept="image/*" hidden>
     <input id="sticker-input" type="file" accept="image/png,image/webp,image/svg+xml,image/*" hidden>
